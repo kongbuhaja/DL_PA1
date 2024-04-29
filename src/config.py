@@ -30,7 +30,7 @@ DEVICES             = [0]
 PRECISION_STR       = '32-true'
 
 # Logging
-WANDB_PROJECT       = 'aue8088-pa1'
+WANDB_PROJECT       = 'DL_PA1'
 WANDB_ENTITY        = os.environ.get('WANDB_ENTITY')
 WANDB_SAVE_DIR      = 'wandb/'
 WANDB_IMG_LOG_FREQ  = 50
