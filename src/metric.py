@@ -13,17 +13,7 @@ class MyAccuracy(Metric):
         assert max_id.shape == target.shape
 
         correct = torch.count_nonzero(max_id==target)
-
-        # [TODO] check if preds and target have equal shape
-
-
-        # [TODO] Cound the number of correct prediction
-
-
-        # Accumulate to self.correct
         self.correct += correct
-
-        # Count the number of elements in target
         self.total += target.numel()
 
     def compute(self, eps=1e-6):
@@ -45,16 +35,28 @@ class MyF1Score(Metric):
         for cls in range(self.num_classes):
             pred_mask = (max_id == cls)
             target_mask = (target == cls)
-            tp_mask = torch.logical_and(pred_mask, target_mask)
+            tp_mask = pred_mask & target_mask
 
-            tp = torch.count_nonzero(tp_mask)
-            fp = torch.count_nonzero(pred_mask) - tp
-            fn = torch.count_nonzero(target_mask) - tp
+            tp = tp_mask.sum()
+            fp = pred_mask.sum() - tp
+            fn = target_mask.sum() - tp
             self.TP[cls] += tp
             self.FP[cls] += fp
             self.FN[cls] += fn
 
-    def compute(self, eps=1e-6):
-        precisions = self.TP.float() / (self.TP.float() + self.FP.float() + eps)
-        recalls = self.TP.float() / (self.TP.float() + self.FN.float() + eps)
-        return torch.mean(2 * (precisions * recalls) / (precisions + recalls + eps)), torch.mean(precisions), torch.mean(recalls)
+    def compute(self, average='micro', eps=1e-6):
+        if average == 'macro':
+            precisions = self.TP.float() / (self.TP.float() + self.FP.float() + eps)
+            recalls = self.TP.float() / (self.TP.float() + self.FN.float() + eps)
+            f1 = (2 * (precisions * recalls) / (precisions + recalls + eps)).mean()
+            precision = precisions.mean()
+            recall = recalls.mean()
+        elif average == 'micro':
+            TP = self.TP.sum()
+            FP = self.FP.sum()
+            FN = self.FN.sum()
+            precision = TP / (TP + FP + eps)
+            recall = TP / (TP + FN + eps)
+            f1 = 2 * (precision * recall) / (precision + recall)
+
+        return f1, precision, recall

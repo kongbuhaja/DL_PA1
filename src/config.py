@@ -7,7 +7,7 @@ VAL_EVERY_N_EPOCH   = 1
 
 METRIC              = 'f1score'
 
-NUM_EPOCHS          = 300
+NUM_EPOCHS          = 100
 OPTIMIZER_PARAMS    = {'type': 'SGD', 'lr': 0.01, 'momentum': 0.9}
 SCHEDULER_PARAMS    = {'type': 'MultiStepLR', 'milestones': [50, 100, 150, 200, 250], 'gamma': 0.9}
 
@@ -17,7 +17,7 @@ NUM_WORKERS         = 8
 
 # Augmentation
 IMAGE_SIZE          = 64
-IMAGE_ROTATION      = 5
+IMAGE_ROTATION      = 20
 IMAGE_FLIP_PROB     = 0.5
 IMAGE_NUM_CROPS     = 64
 IMAGE_PAD_CROPS     = 4
