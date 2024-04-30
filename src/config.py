@@ -7,7 +7,7 @@ VAL_EVERY_N_EPOCH   = 1
 
 METRIC              = 'f1score'
 
-NUM_EPOCHS          = 100
+NUM_EPOCHS          = 300
 OPTIMIZER_PARAMS    = {'type': 'SGD', 'lr': 0.01, 'momentum': 0.9}
 SCHEDULER_PARAMS    = {'type': 'MultiStepLR', 'milestones': [50, 100, 150, 200, 250], 'gamma': 0.5}
 
