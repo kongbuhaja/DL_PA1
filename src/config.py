@@ -9,7 +9,7 @@ METRIC              = 'f1score'
 
 NUM_EPOCHS          = 100
 OPTIMIZER_PARAMS    = {'type': 'SGD', 'lr': 0.01, 'momentum': 0.9}
-SCHEDULER_PARAMS    = {'type': 'MultiStepLR', 'milestones': [50, 100, 150, 200, 250], 'gamma': 0.9}
+SCHEDULER_PARAMS    = {'type': 'MultiStepLR', 'milestones': [50, 100, 150, 200, 250], 'gamma': 0.5}
 
 # Dataaset
 DATASET_ROOT_PATH   = 'datasets/'
@@ -25,7 +25,7 @@ IMAGE_MEAN          = [0.4802, 0.4481, 0.3975]
 IMAGE_STD           = [0.2302, 0.2265, 0.2262]
 
 # Network
-MODEL_NAME          = 'resnet18'
+MODEL_NAME          = 'resnet101'
 
 # Compute related
 ACCELERATOR         = 'gpu'
