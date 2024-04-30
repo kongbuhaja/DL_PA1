@@ -24,6 +24,7 @@ if __name__ == "__main__":
         num_classes = cfg.NUM_CLASSES,
         optimizer_params = cfg.OPTIMIZER_PARAMS,
         scheduler_params = cfg.SCHEDULER_PARAMS,
+        metric = cfg.METRIC
     )
 
     datamodule = TinyImageNetDatasetModule(
@@ -46,7 +47,7 @@ if __name__ == "__main__":
         logger = wandb_logger,
         callbacks = [
             LearningRateMonitor(logging_interval='epoch'),
-            ModelCheckpoint(save_top_k=1, monitor='accuracy/val', mode='max'),
+            ModelCheckpoint(save_top_k=1, monitor=f'{cfg.METRIC}/val', mode='max'),
         ],
     )
 

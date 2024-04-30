@@ -12,7 +12,7 @@ from torchvision.models.alexnet import AlexNet
 import torch
 
 # Custom packages
-from src.metric import MyAccuracy
+from src.metric import MyAccuracy, MyF1Score
 import src.config as cfg
 from src.util import show_setting
 
@@ -40,6 +40,7 @@ class SimpleClassifier(LightningModule):
                  num_classes: int = 200,
                  optimizer_params: Dict = dict(),
                  scheduler_params: Dict = dict(),
+                 metric: str = 'recall'
         ):
         super().__init__()
 
@@ -55,11 +56,19 @@ class SimpleClassifier(LightningModule):
         self.loss_fn = nn.CrossEntropyLoss()
 
         # Metric
-        self.accuracy = MyAccuracy()
+        if metric=='recall':
+            self.metric = MyAccuracy()
+            self.loging = lambda loss, performance, task: self.log_dict({f'loss/{task}': loss, f'{metric}/{task}': performance}, 
+                                                                     on_step=False, on_epoch=True, prog_bar=True, logger=True)
+        else:
+            self.metric = MyF1Score(num_classes)
+            self.loging = lambda loss, performance, task: self.log_dict({f'loss/{task}': loss, f'{metric}/{task}':performance[0], 
+                                                                      f'precision/{task}': performance[1], f'recall/{task}': performance[2]}, 
+                                                                     on_step=False, on_epoch=True, prog_bar=True, logger=True)
 
         # Hyperparameters
         self.save_hyperparameters()
-
+        
     def on_train_start(self):
         show_setting(cfg)
 
@@ -78,16 +87,15 @@ class SimpleClassifier(LightningModule):
 
     def training_step(self, batch, batch_idx):
         loss, scores, y = self._common_step(batch)
-        accuracy = self.accuracy(scores, y)
-        self.log_dict({'loss/train': loss, 'accuracy/train': accuracy},
-                      on_step=False, on_epoch=True, prog_bar=True, logger=True)
+        performance = self.metric(scores, y)
+        self.loging(loss, performance, 'train')
+  
         return loss
 
     def validation_step(self, batch, batch_idx):
         loss, scores, y = self._common_step(batch)
-        accuracy = self.accuracy(scores, y)
-        self.log_dict({'loss/val': loss, 'accuracy/val': accuracy},
-                      on_step=False, on_epoch=True, prog_bar=True, logger=True)
+        performance = self.metric(scores, y)
+        self.loging(loss, performance, 'val')
         self._wandb_log_image(batch, batch_idx, scores, frequency = cfg.WANDB_IMG_LOG_FREQ)
 
     def _common_step(self, batch):
