@@ -43,6 +43,7 @@ class SimpleClassifier(LightningModule):
                  metric: str = 'recall'
         ):
         super().__init__()
+        self.num_classes = num_classes
 
         # Network
         if model_name == 'MyNetwork':
@@ -68,7 +69,16 @@ class SimpleClassifier(LightningModule):
 
         # Hyperparameters
         self.save_hyperparameters()
-        
+
+    def one_hot(self, y, smooth=True, alpha=0.1):
+        onehot = torch.zeros((y.shape[0], self.num_classes), dtype=torch.float32)
+        b = torch.arange(y.shape[0])
+        onehot[b, y] = 1.
+        if smooth:
+            onehot * (1 - alpha) + alpha/self.num_classes
+
+        return onehot.to(y.device)
+
     def on_train_start(self):
         show_setting(cfg)
 
@@ -100,8 +110,9 @@ class SimpleClassifier(LightningModule):
 
     def _common_step(self, batch):
         x, y = batch
+        y_ = self.one_hot(y)
         scores = self.forward(x)
-        loss = self.loss_fn(scores, y)
+        loss = self.loss_fn(scores, y_)
         return loss, scores, y
 
     def _wandb_log_image(self, batch, batch_idx, preds, frequency = 100):
