@@ -8,30 +8,14 @@ from lightning.pytorch import LightningModule
 from lightning.pytorch.loggers.wandb import WandbLogger
 from torch import nn
 from torchvision import models
-from torchvision.models.alexnet import AlexNet
 import torch
 
 # Custom packages
 from src.metric import MyAccuracy, MyF1Score
 import src.config as cfg
 from src.util import show_setting
-
-
-# [TODO: Optional] Rewrite this class if you want
-class MyNetwork(AlexNet):
-    def __init__(self):
-        super().__init__()
-
-        # [TODO] Modify feature extractor part in AlexNet
-
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # [TODO: Optional] Modify this as well if you want
-        x = self.features(x)
-        x = self.avgpool(x)
-        x = torch.flatten(x, 1)
-        x = self.classifier(x)
-        return x
+from src.ViT import VisionTransformer
+from src.AlexNet import AlexNet
 
 
 class SimpleClassifier(LightningModule):
@@ -46,8 +30,10 @@ class SimpleClassifier(LightningModule):
         self.num_classes = num_classes
 
         # Network
-        if model_name == 'MyNetwork':
-            self.model = MyNetwork()
+        if model_name == 'AlexNet':
+            self.model = AlexNet(cfg)
+        elif model_name == 'ViT':
+            self.model = VisionTransformer(cfg)
         else:
             models_list = models.list_models()
             assert model_name in models_list, f'Unknown model name: {model_name}. Choose one from {", ".join(models_list)}'

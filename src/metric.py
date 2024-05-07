@@ -8,7 +8,6 @@ class MyAccuracy(Metric):
         self.add_state('correct', default=torch.tensor(0), dist_reduce_fx='sum')
 
     def update(self, preds, target):
-        # [TODO] The preds (B x C tensor), so take argmax to get index with highest confidence
         max_id = torch.argmax(preds, axis=-1)
         assert max_id.shape == target.shape
 
@@ -28,7 +27,6 @@ class MyF1Score(Metric):
         self.num_classes = num_classes
 
     def update(self, preds, target):
-        # [TODO] The preds (B x C tensor), so take argmax to get index with highest confidence
         max_id = torch.argmax(preds, axis=-1)
         assert max_id.shape == target.shape
 

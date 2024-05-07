@@ -41,17 +41,17 @@ class TinyImageNetDatasetModule(LightningDataModule):
 
     def train_dataloader(self):
         tf_train = transforms.Compose([
-            # transforms.Resize((cfg.IMAGE_SIZE, cfg.IMAGE_SIZE)),
+            transforms.Resize((cfg.IMAGE_SIZE, cfg.IMAGE_SIZE)),
             transforms.GaussianBlur(kernel_size=(3, 3)),
             transforms.RandomAdjustSharpness(0.1),
             transforms.RandomRotation(cfg.IMAGE_ROTATION),
             transforms.RandomHorizontalFlip(cfg.IMAGE_FLIP_PROB),
             transforms.RandomVerticalFlip(cfg.IMAGE_FLIP_PROB),
             transforms.RandomCrop(cfg.IMAGE_NUM_CROPS, padding=cfg.IMAGE_PAD_CROPS),
-            transforms.ColorJitter(brightness=(0.8, 1.2),
-                                   contrast=(0.8, 1.2),
-                                   saturation=(0.1, 1.1),
-                                   hue=(-0.2, 0.2),),
+            transforms.ColorJitter(brightness=0.2,
+                                   contrast=0.2,
+                                   saturation=0.2,
+                                   hue=0.2),
             transforms.ToTensor(),
             transforms.Normalize(cfg.IMAGE_MEAN, cfg.IMAGE_STD),
         ])
@@ -69,7 +69,7 @@ class TinyImageNetDatasetModule(LightningDataModule):
 
     def val_dataloader(self):
         tf_val = transforms.Compose([
-            # transforms.Resize((cfg.IMAGE_SIZE, cfg.IMAGE_SIZE)),
+            transforms.Resize((cfg.IMAGE_SIZE, cfg.IMAGE_SIZE)),
             transforms.ToTensor(),
             transforms.Normalize(cfg.IMAGE_MEAN, cfg.IMAGE_STD),
         ])
