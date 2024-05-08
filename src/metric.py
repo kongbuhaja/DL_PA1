@@ -55,6 +55,6 @@ class MyF1Score(Metric):
             FN = self.FN.sum()
             precision = TP / (TP + FP + eps)
             recall = TP / (TP + FN + eps)
-            f1 = 2 * (precision * recall) / (precision + recall)
+            f1 = 2 * (precision * recall) / (precision + recall + eps)
 
         return f1, precision, recall
