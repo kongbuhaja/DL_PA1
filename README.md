@@ -40,11 +40,14 @@ $ echo "export WANDB_ENTITY={YOUR_WANDB_ENTITY}" >> ~/.bashrc
 $ source ~/.bashrc
 ```
 
-# 1. [TODO] Evaluation metric
+# 1. Evaluation metric
 - Support Accuracy, F1Score(Macro, Micro)
 
+# 2. Config
+- Set hyperparameters about training, model, data, augmentation in src/config.py 
 
-# 2. [TODO] Train models
+
+# 3. Train models
 | Model | ViT | ResNet18 | AlexNet |  
 | ------------- | ------ | ------| ------ |
 | **F1Score**  | 0.3646 | 0.4689 | 0.3993 |
