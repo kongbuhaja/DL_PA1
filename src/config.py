@@ -2,14 +2,14 @@ import os
 
 # Training Hyperparameters
 NUM_CLASSES                 = 200
-BATCH_SIZE                  = 64
+BATCH_SIZE                  = 6128
 VAL_EVERY_N_EPOCH           = 1
 
 METRIC                      = 'f1score'
 
 NUM_EPOCHS                  = 1000
-OPTIMIZER_PARAMS            = {'type': 'SGD', 'lr': 0.01, 'momentum': 0.9}
-# OPTIMIZER_PARAMS            = {'type': 'AdamW', 'lr': 0.01}
+# OPTIMIZER_PARAMS            = {'type': 'SGD', 'lr': 0.01, 'momentum': 0.9}
+OPTIMIZER_PARAMS            = {'type': 'AdamW', 'lr': 0.01}
 SCHEDULER_PARAMS            = {'type': 'MultiStepLR', 'milestones': [100, 200, 400, 600], 'gamma': 0.5}
 
 # Dataset
@@ -42,17 +42,17 @@ WANDB_NAME                  = f'{MODEL_NAME}-B{BATCH_SIZE}-{OPTIMIZER_PARAMS["ty
 
 if MODEL_NAME == 'ViT':
     PATCH_SIZE                  = 4
-    HIDDEN_SIZE                 = 384
-    MSA_DROPOUT_RATE            = 0.0
+    HIDDEN_SIZE                 = 200
+    MSA_DROPOUT_RATE            = 0
     HEAD_SIZE                   = 4
-    MLP_SIZE                    = 1000
-    TRANSFORMER_SIZE            = 6
+    MLP_SIZE                    = 500
+    TRANSFORMER_SIZE            = 4
     TRANSFORMER_DROPOUT_RATE    = 0.1
     WANDB_NAME                 += f'-T{TRANSFORMER_SIZE}-P{PATCH_SIZE}-H{HIDDEN_SIZE}-M{MLP_SIZE}'
 
 elif MODEL_NAME == 'AlexNet':
-    CONV_SIZE                   = 64
-    MLP_SIZE                    = 4096
+    CONV_SIZE                   = 128
+    MLP_SIZE                    = 2048
     DROPOUT_RATE                = 0.4
 
 # WANDB_NAME                  += f'-{SCHEDULER_PARAMS["type"]}{OPTIMIZER_PARAMS["lr"]:.1E}'

@@ -20,10 +20,10 @@ class AlexNet(nn.Module):
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
         )
-        self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
+        # self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
         self.classifier = nn.Sequential(
             nn.Dropout(cfg.DROPOUT_RATE),
-            nn.Linear(cfg.CONV_SIZE*4 * 6 * 6, cfg.MLP_SIZE),
+            nn.Linear(cfg.CONV_SIZE*4 * 3 * 3, cfg.MLP_SIZE),
             nn.ReLU(inplace=True),
             nn.Dropout(cfg.DROPOUT_RATE),
             nn.Linear(cfg.MLP_SIZE, cfg.MLP_SIZE),
@@ -33,7 +33,7 @@ class AlexNet(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.features(x)
-        x = self.avgpool(x)
+        # x = self.avgpool(x)
         x = torch.flatten(x, 1)
         x = self.classifier(x)
         return x
